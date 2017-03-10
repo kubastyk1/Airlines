@@ -1,88 +1,190 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page session="false" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page session="false"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="../../favicon.ico">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="icon" href="../../favicon.ico">
 
-    <title>Cover Template for Bootstrap</title>
+<title>Cover Template for Bootstrap</title>
 
-    <!-- Bootstrap core CSS -->
-    <link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
+<script
+	src="http://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/a549aa8780dbda16f6cff545aeabc3d71073911e/src/js/bootstrap-datetimepicker.js"></script>
 
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+<link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+<link href="<c:url value="/resources/css/cover.css" />" rel="stylesheet">
+<link
+	href="http://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/a549aa8780dbda16f6cff545aeabc3d71073911e/build/css/bootstrap-datetimepicker.css"
+	rel="stylesheet" />
 
-    <!-- Custom styles for this template -->
-    <link href="<c:url value="/resources/css/cover.css" />" rel="stylesheet">
+<script>
+function changeFromDescription(change) {
+	var x = document.getElementById("fromButton");
+	x.innerHTML = change;
+}
+function changeToDescription(change) {
+	var x = document.getElementById("toButton");
+	x.innerHTML = change;
+}
+</script>
 
-    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
-    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-    <script src="../../assets/js/ie-emulation-modes-warning.js"></script>
+</head>
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-  </head>
+<body>
 
-  <body>
+	<!-- Spring Security -->
+	<script>
+		function formSubmit() {
+			document.getElementById("logoutForm").submit();
+		}
+	</script>
 
-    <div class="site-wrapper">
+	<c:url value="/j_spring_security_logout" var="logoutUrl" />
 
-      <div class="site-wrapper-inner">
+	<form action="${logoutUrl}" method="post" id="logoutForm">
+		<input type="hidden" name="${_csrf.parameterName}"
+			value="${_csrf.token}" />
+	</form>
 
-        <div class="cover-container">
 
-          <div class="masthead clearfix">
-            <div class="inner">
-              <h3 class="masthead-brand">Cover</h3>
-              <nav>
-                <ul class="nav masthead-nav">
-                  <li class="active"><a href="#">Home</a></li>
-                  <li><a href="#">Features</a></li>
-                  <li><a href="#">Contact</a></li>
-                </ul>
-              </nav>
-            </div>
-          </div>
 
-          <div class="inner cover">
-            <h1 class="cover-heading">Cover your page.</h1>
-            <p class="lead">Cover is a one-page template for building simple and beautiful home pages. Download, edit the text, and add your own fullscreen background photo to make it your own.</p>
-            <p class="lead">
-              <a href="#" class="btn btn-lg btn-default">Learn more</a>
-            </p>
-          </div>
 
-          <div class="mastfoot">
-            <div class="inner">
-              <p>Cover template for <a href="http://getbootstrap.com">Bootstrap</a>, by <a href="https://twitter.com/mdo">@mdo</a>.</p>
-            </div>
-          </div>
 
-        </div>
+	<div class="site-wrapper">
+		<div class="site-wrapper-inner">
+			<div class="cover-container">
+				<div class="masthead clearfix">
+					<div class="inner">
+						<h3 class="masthead-brand">Airlines</h3>
+						<nav>
+							<ul class="nav masthead-nav">
 
-      </div>
+								<li class="active"><a href="#">Home</a></li>
+								<!--  Jezeli nie jest zalogowany  -->
+								<c:if test="${pageContext.request.userPrincipal.name == null}">
+									<form name='signupForm' action='/airlines/signup' method='GET'>
+										<input name="submit" class="buttonStyle" type="submit"
+											value="Sign up" />
+									</form>
+									<form name='loginForm' action='/airlines/login' method='GET'>
+										<input name="submit" class="buttonStyle2" type="submit"
+											value="Log in" />
+									</form>
+								</c:if>
 
-    </div>
+								<!--  Jezeli jest zalogowany  -->
+								<c:if test="${pageContext.request.userPrincipal.name != null}">
+									<form name='logoutForm' method='GET'>
+										<input name="submit" class="buttonStyleRed" type="submit"
+											value="${pageContext.request.userPrincipal.name}" />
+									</form>
 
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-    <script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
-  </body>
+									<form name='userForm' action="javascript:formSubmit()"
+										method='GET'>
+										<input name="submit" class="buttonStyleRed" type="submit"
+											value="Log out" />
+									</form>
+								</c:if>
+
+							</ul>
+						</nav>
+					</div>
+				</div>
+
+
+				<div class="inner cover">
+					<h1 class="cover-heading">Search flights:</h1>
+
+					<div class="dropdown my-dropdown">
+						<button class="btn btn-default btn-primary dropdown-toggle"
+							type="button" data-toggle="dropdown" id="fromButton">
+							From: <span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu">
+							<li><a href="javascript:changeFromDescription('Gdansk');">Gdansk</a></li>
+							<li><a href="javascript:changeFromDescription('Warszawa');">Warszawa</a></li>
+							<li><a href="javascript:changeFromDescription('Lodz');">Lodz</a></li>
+						</ul>
+					</div>
+
+					<div class="container calendarText ">
+						<div class="row">
+							<div class='col-sm-6'>
+								<div class="form-group">
+									<div class='input-group date' id='datetimepicker2'>
+										<input type='text' class="form-control" /> <span
+											class="input-group-addon"> <span
+											class="glyphicon glyphicon-calendar"></span>
+										</span>
+									</div>
+								</div>
+							</div>
+							<script type="text/javascript">
+								$(function() {
+									$('#datetimepicker2').datetimepicker({
+										locale : 'pl'
+									});
+								});
+							</script>
+						</div>
+					</div>
+
+					<div class="dropdown my-dropdown">
+						<button class="btn btn-default btn-primary dropdown-toggle"
+							type="button" data-toggle="dropdown" id="toButton">
+							To: <span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu">
+							<li><a href="javascript:changeToDescription('Gdansk');">Gdansk</a></li>
+							<li><a href="javascript:changeToDescription('Warszawa');">Warszawa</a></li>
+							<li><a href="javascript:changeToDescription('Lodz');">Lodz</a></li>
+						</ul>
+					</div>
+
+					<div class="container calendarText ">
+						<div class="row">
+							<div class='col-sm-6'>
+								<div class="form-group">
+									<div class='input-group date' id='datetimepicker3'>
+										<input type='text' class="form-control" /> <span
+											class="input-group-addon"> <span
+											class="glyphicon glyphicon-calendar"></span>
+										</span>
+									</div>
+								</div>
+							</div>
+ 							<script type="text/javascript">
+								$(function() {
+									$('#datetimepicker3').datetimepicker({
+										locale : 'pl'
+									});
+								});
+							</script>
+						</div>
+					</div>
+
+					<p class="lead">
+						<a href="#" class="btn btn-lg btn-default">Search!</a>
+					</p>
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+</body>
 </html>
 
