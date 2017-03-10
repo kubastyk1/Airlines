@@ -22,21 +22,22 @@
 <script
 	src="http://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/a549aa8780dbda16f6cff545aeabc3d71073911e/src/js/bootstrap-datetimepicker.js"></script>
 
-<link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+<link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css"
+	rel="stylesheet">
 <link href="<c:url value="/resources/css/cover.css" />" rel="stylesheet">
 <link
 	href="http://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/a549aa8780dbda16f6cff545aeabc3d71073911e/build/css/bootstrap-datetimepicker.css"
 	rel="stylesheet" />
 
 <script>
-function changeFromDescription(change) {
-	var x = document.getElementById("fromButton");
-	x.innerHTML = change;
-}
-function changeToDescription(change) {
-	var x = document.getElementById("toButton");
-	x.innerHTML = change;
-}
+	function changeFromDescription(change) {
+		var x = document.getElementById("fromButton");
+		x.innerHTML = change;
+	}
+	function changeToDescription(change) {
+		var x = document.getElementById("toButton");
+		x.innerHTML = change;
+	}
 </script>
 
 </head>
@@ -112,9 +113,13 @@ function changeToDescription(change) {
 							From: <span class="caret"></span>
 						</button>
 						<ul class="dropdown-menu">
-							<li><a href="javascript:changeFromDescription('Gdansk');">Gdansk</a></li>
-							<li><a href="javascript:changeFromDescription('Warszawa');">Warszawa</a></li>
-							<li><a href="javascript:changeFromDescription('Lodz');">Lodz</a></li>
+							<c:forEach items="${airportList}" var="i">
+								<li>
+									<a href="javascript:changeFromDescription('<c:out value="${i.getCity()}" />');">
+										<c:out value="${i.getCity()}" />
+									</a>
+								</li>
+							</c:forEach>
 						</ul>
 					</div>
 
@@ -146,9 +151,13 @@ function changeToDescription(change) {
 							To: <span class="caret"></span>
 						</button>
 						<ul class="dropdown-menu">
-							<li><a href="javascript:changeToDescription('Gdansk');">Gdansk</a></li>
-							<li><a href="javascript:changeToDescription('Warszawa');">Warszawa</a></li>
-							<li><a href="javascript:changeToDescription('Lodz');">Lodz</a></li>
+							<c:forEach items="${airportList}" var="i">
+								<li>
+									<a href="javascript:changeToDescription('<c:out value="${i.getCity()}" />');">
+										<c:out value="${i.getCity()}" />
+									</a>
+								</li>
+							</c:forEach>
 						</ul>
 					</div>
 
@@ -164,7 +173,7 @@ function changeToDescription(change) {
 									</div>
 								</div>
 							</div>
- 							<script type="text/javascript">
+							<script type="text/javascript">
 								$(function() {
 									$('#datetimepicker3').datetimepicker({
 										locale : 'pl'

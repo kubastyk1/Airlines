@@ -1,5 +1,6 @@
 package com.jstudio.airlines;
 
+import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,22 +18,41 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.jstudio.model.Airport;
+import com.jstudio.dao.ObjectDAO;
+
 /**
  * Handles requests for the application home page.
  */
 @Controller
 public class HomeController {
 
+	private static ObjectDAO objectDAO;
+
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {
 
 		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("HibernateConfig.xml");
 
+		objectDAO = context.getBean(ObjectDAO.class);
+
+		Airport airport = new Airport();
+		List<Airport> airportList = getRecords(airport);
+
+		model.addAttribute("airportList", airportList);
+
 		return "home";
 	}
 
+	private static <T> List<T> getRecords(T objectType){
+		List<T> list = objectDAO.list(objectType);
 
+		for(T a : list){
+			System.out.println("List:: " + a);
+		}
 
+		return list;
+	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public ModelAndView login(
