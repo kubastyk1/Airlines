@@ -22,32 +22,52 @@ public class Person {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int idperson;
 
+	private String login;
+	private String email;
+	private String password;
 	private String name;
 	private String surname;
-	private int pesel;
 
 	public Person(){}
 
-	public Person(String name, String surname, int pesel) {
+	public Person(String login, String email, String password, String name, String surname) {
+		this.login = login;
+		this.email = email;
+		this.password = password;
 		this.name = name;
 		this.surname = surname;
-		this.pesel = pesel;
 	}
 
-	public int getPesel() {
-		return pesel;
-	}
-
-	public void setPesel(int pesel) {
-		this.pesel = pesel;
-	}
-
-	public int getId() {
+	public int getIdperson() {
 		return idperson;
 	}
 
-	public void setId(int idperson) {
+	public void setIdperson(int idperson) {
 		this.idperson = idperson;
+	}
+
+	public String getLogin() {
+		return login;
+	}
+
+	public void setLogin(String login) {
+		this.login = login;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public String getName() {
@@ -67,7 +87,12 @@ public class Person {
 	}
 
 	@Override
-	public String toString(){
-		return "id="+idperson+", name="+name+", surname="+surname;
+	public String toString() {
+		return "Person [idperson=" + idperson + ", " + (login != null ? "login=" + login + ", " : "")
+				+ (email != null ? "email=" + email + ", " : "")
+				+ (password != null ? "password=" + password + ", " : "") + (name != null ? "name=" + name + ", " : "")
+				+ (surname != null ? "surname=" + surname : "") + "]";
 	}
+
+
 }

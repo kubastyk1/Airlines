@@ -16,14 +16,14 @@ public class Reservation {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int idreservation;
 
-	private int personid;
+	private int idperson;
 	private int flightid;
 
 	public Reservation(){}
 
-	public Reservation(int personid, int flightid) {
+	public Reservation(int idperson, int flightid) {
 		super();
-		this.personid = personid;
+		this.idperson = idperson;
 		this.flightid = flightid;
 	}
 
@@ -35,12 +35,12 @@ public class Reservation {
 		this.idreservation = idreservation;
 	}
 
-	public int getPersonid() {
-		return personid;
+	public int getidperson() {
+		return idperson;
 	}
 
-	public void setPersonid(int personid) {
-		this.personid = personid;
+	public void setidperson(int idperson) {
+		this.idperson = idperson;
 	}
 
 	public int getFlightid() {
@@ -53,7 +53,7 @@ public class Reservation {
 
 	@Override
 	public String toString() {
-		return "Reservation [idreservation=" + idreservation + ", personid=" + personid + ", flightid=" + flightid
+		return "Reservation [idreservation=" + idreservation + ", idperson=" + idperson + ", flightid=" + flightid
 				+ "]";
 	}
 

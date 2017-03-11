@@ -7,9 +7,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.RememberMeAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.jstudio.model.Airport;
+import com.jstudio.model.Person;
 import com.jstudio.dao.ObjectDAO;
 
 /**
@@ -41,17 +44,28 @@ public class HomeController {
 
 		model.addAttribute("airportList", airportList);
 
+/*		Person person = new Person("kuba1", "kuba1@wp.pl","kuba", "kuba", "kubakuba");
+		addRecord(person);*/
+
 		return "home";
 	}
 
 	private static <T> List<T> getRecords(T objectType){
 		List<T> list = objectDAO.list(objectType);
 
+	//	printList(list);
+
+		return list;
+	}
+
+	private static <T> void printList(List<T> list){
 		for(T a : list){
 			System.out.println("List:: " + a);
 		}
+	}
 
-		return list;
+	private static <T> void addRecord(T record){
+		objectDAO.save(record);
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
@@ -133,10 +147,40 @@ public class HomeController {
 	}
 
 	@RequestMapping(value = "/signup", method = RequestMethod.POST)
-	public String signup(/*User user,*/ Model model) {
+	public String signup(Person person, Model model) {
 
+		addRecord(person);
 	/*	model.addAttribute("newUser", user);*/
-		return "rooms";
+		return "home";
+	}
+
+	@RequestMapping(value = "/admin**", method = RequestMethod.GET)
+	public ModelAndView adminPage() {
+
+	  ModelAndView model = new ModelAndView();
+	  model.addObject("title", "Spring Security Login Form - Database Authentication");
+	  model.addObject("message", "This page is for ROLE_ADMIN only!");
+	  model.setViewName("admin");
+	  return model;
+
+	}
+
+	//for 403 access denied page
+	@RequestMapping(value = "/403", method = RequestMethod.GET)
+	public ModelAndView accesssDenied() {
+
+	  ModelAndView model = new ModelAndView();
+
+	  //check if user is login
+	  Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	  if (!(auth instanceof AnonymousAuthenticationToken)) {
+		UserDetails userDetail = (UserDetails) auth.getPrincipal();
+		model.addObject("username", userDetail.getUsername());
+	  }
+
+	  model.setViewName("403");
+	  return model;
+
 	}
 
 }

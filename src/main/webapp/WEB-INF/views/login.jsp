@@ -36,7 +36,7 @@
     <![endif]-->
 </head>
 
-<body onload='document.loginForm.username.focus();'>
+<body>
 
 	<div class="container">
 
@@ -50,7 +50,7 @@
 		<form class="form-signin" action="<c:url value='j_spring_security_check'/>" method='POST'>
 			<h2 class="form-signin-heading">Please log in</h2>
 
-			<label for="inputEmail" class="sr-only">Email address</label>
+			<label for="inputLogin" class="sr-only">Login</label>
 			<input type="text" name="username" class="form-control" placeholder="Login" required autofocus>
 
 			<label for="inputPassword" class="sr-only">Password</label>
@@ -61,7 +61,7 @@
 					Remember me
 				</label>
 			</div>
-			<button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+			<button class="btn btn-lg btn-primary btn-block" type="submit">Log in</button>
 
 			<input type="hidden" name="${_csrf.parameterName}"
 				value="${_csrf.token}" />
