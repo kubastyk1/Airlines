@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.RememberMeAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,6 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.jstudio.model.Airport;
 import com.jstudio.model.Person;
+import com.jstudio.model.Trip;
 import com.jstudio.dao.ObjectDAO;
 
 /**
@@ -67,6 +70,14 @@ public class HomeController {
 	private static <T> void addRecord(T record){
 		objectDAO.save(record);
 	}
+
+
+	@RequestMapping(value = "/search", method = RequestMethod.GET)
+	public String search(Locale locale, Model model) {
+
+		return "search";
+	}
+
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public ModelAndView login(
@@ -182,5 +193,16 @@ public class HomeController {
 	  return model;
 
 	}
+
+	@MessageMapping("/sendValues")
+    @SendTo("/topic/showValues")
+    public Trip showValues(Trip trip) throws Exception {
+        Thread.sleep(3000); // simulated delay
+
+        System.out.println("Wszedlem do wiekuistej przesztrzeni Soapowej");
+        trip.toString();
+
+        return trip;
+    }
 
 }

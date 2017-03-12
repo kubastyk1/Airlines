@@ -22,14 +22,49 @@
 <script
 	src="http://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/a549aa8780dbda16f6cff545aeabc3d71073911e/src/js/bootstrap-datetimepicker.js"></script>
 
-<link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css"
-	rel="stylesheet">
+<script src="<c:url value="/resources/js/sockjs-0.3.4.js" />"></script>
+<script src="<c:url value="/resources/js/stomp.js" />"></script>
+
+<link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
 <link href="<c:url value="/resources/css/cover.css" />" rel="stylesheet">
 <link
 	href="http://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/a549aa8780dbda16f6cff545aeabc3d71073911e/build/css/bootstrap-datetimepicker.css"
 	rel="stylesheet" />
 
 <script>
+	window.onload = function() {
+		/* Conection */
+		var stompClient = null;
+		connect();
+	}
+
+	/* WebSocket functions */
+	function connect() {
+	    var socket = new SockJS("<c:url value='/hello'/>");
+	    stompClient = Stomp.over(socket);
+	    stompClient.connect({}, function(frame) {
+	        console.log('Connected: ' + frame);
+	        stompClient.subscribe('/topic/showValues', showValues);
+	    });
+	}
+
+	function sendValues(){
+		var fromAirport = document.getElementById("fromButton").innerText;
+		var toAirport = document.getElementById("toButton").innerText;
+		var fromDate = document.getElementById("fromDate").value;
+		var toDate = document.getElementById("toDate").value;
+
+		changeFromDescription('sendValues');
+
+		stompClient.send("/app/sendValues", {}, JSON.stringify(
+	    		{'fromAirport': fromAirport, 'toAirport': toAirport, 'fromDate': fromDate, 'toDate': toDate}));
+	}
+
+	function showValues(message) {
+
+		changeButtonName();
+	}
+
 	function changeFromDescription(change) {
 		var x = document.getElementById("fromButton");
 		x.innerHTML = change;
@@ -38,6 +73,12 @@
 		var x = document.getElementById("toButton");
 		x.innerHTML = change;
 	}
+
+	function changeButtonName(){
+		var x = document.getElementById("searchBtn");
+		x.innerHTML = "zima czyma";
+	}
+
 </script>
 
 </head>
@@ -127,8 +168,9 @@
 						<div class="row">
 							<div class='col-sm-6'>
 								<div class="form-group">
-									<div class='input-group date' id='datetimepicker2'>
-										<input type='text' class="form-control" /> <span
+									<div class='input-group date' id='datetimepickerFrom'>
+										<input id="fromDate" type='text' class="form-control" />
+										<span
 											class="input-group-addon"> <span
 											class="glyphicon glyphicon-calendar"></span>
 										</span>
@@ -137,7 +179,7 @@
 							</div>
 							<script type="text/javascript">
 								$(function() {
-									$('#datetimepicker2').datetimepicker({
+									$('#datetimepickerFrom').datetimepicker({
 										locale : 'pl'
 									});
 								});
@@ -165,8 +207,9 @@
 						<div class="row">
 							<div class='col-sm-6'>
 								<div class="form-group">
-									<div class='input-group date' id='datetimepicker3'>
-										<input type='text' class="form-control" /> <span
+									<div class='input-group date' id='datetimepickerTo'>
+										<input id="toDate" type='text' class="form-control" />
+										<span
 											class="input-group-addon"> <span
 											class="glyphicon glyphicon-calendar"></span>
 										</span>
@@ -175,7 +218,7 @@
 							</div>
 							<script type="text/javascript">
 								$(function() {
-									$('#datetimepicker3').datetimepicker({
+									$('#datetimepickerTo').datetimepicker({
 										locale : 'pl'
 									});
 								});
@@ -184,7 +227,8 @@
 					</div>
 
 					<p class="lead">
-						<a href="#" class="btn btn-lg btn-default">Search!</a>
+						<a href="/airlines/search" class="btn btn-lg btn-default">Search!</a>
+						<button id="searchBtn" class="buttonStyleDisable" onclick="sendValues();">Java script</button>
 					</p>
 				</div>
 

@@ -29,13 +29,13 @@
 
 	<authentication-manager>
 		<authentication-provider>
-<!--
-			<jdbc-user-service data-source-ref="dataSource"
+
+<!-- 			<jdbc-user-service data-source-ref="dataSource"
 		 		 users-by-username-query=
 		    		"select login,password from person where login=?"
 		 		 authorities-by-username-query=
-		    		"select idperson, role from user_roles where idperson =?  " />-->
-
+		    		"select idperson, role from user_roles where idperson =?  " />
+ -->
 
 			<user-service>
 				<user name="user1" password="pass1" authorities="ROLE_ADMIN" />
