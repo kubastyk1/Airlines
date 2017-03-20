@@ -1,5 +1,6 @@
 package com.jstudio.airlines;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -23,7 +24,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.jstudio.model.Airport;
+import com.jstudio.model.Flight;
 import com.jstudio.model.Person;
+import com.jstudio.model.Rout;
 import com.jstudio.model.Trip;
 import com.jstudio.dao.ObjectDAO;
 
@@ -34,6 +37,7 @@ import com.jstudio.dao.ObjectDAO;
 public class HomeController {
 
 	private static ObjectDAO objectDAO;
+	private List<Trip> tripList;
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {
@@ -41,6 +45,7 @@ public class HomeController {
 		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("HibernateConfig.xml");
 
 		objectDAO = context.getBean(ObjectDAO.class);
+		tripList = new ArrayList();
 
 		Airport airport = new Airport();
 		List<Airport> airportList = getRecords(airport);
@@ -55,8 +60,7 @@ public class HomeController {
 
 	private static <T> List<T> getRecords(T objectType){
 		List<T> list = objectDAO.list(objectType);
-
-	//	printList(list);
+//		printList(list);
 
 		return list;
 	}
@@ -74,6 +78,14 @@ public class HomeController {
 
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
 	public String search(Locale locale, Model model) {
+
+		Trip trip = tripList.get(0);
+		model.addAttribute("trip", trip);
+
+		List flightsList = new ArrayList();
+		flightsList = objectDAO.getFlights(trip.getFromAirport(), trip.getToAirport());
+
+		printList(flightsList);
 
 		return "search";
 	}
@@ -200,9 +212,19 @@ public class HomeController {
         Thread.sleep(3000); // simulated delay
 
         System.out.println("Wszedlem do wiekuistej przesztrzeni Soapowej");
-        trip.toString();
+        tripList.add(trip);
 
         return trip;
     }
+
+
+	/*
+	 * SELECT * FROM airlines.rout
+INNER JOIN airlines.airport air1
+ON rout.from_airport = air1.idairport
+INNER JOIN airlines.airport air2
+ON rout.to_airport = air2.idairport
+WHERE air1.city = 'Lodz' && air2.city = 'Poznan'
+	 */
 
 }

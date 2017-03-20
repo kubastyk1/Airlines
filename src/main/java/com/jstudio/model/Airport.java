@@ -1,10 +1,14 @@
 package com.jstudio.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -17,6 +21,12 @@ public class Airport {
 	private int idairport;
 	private String city;
 	private String code;
+
+	@OneToMany(mappedBy = "airport")
+    private List<Rout> rout = new ArrayList<Rout>();
+
+	@OneToMany(mappedBy = "airport")
+    private List<Rout> rout2 = new ArrayList<Rout>();
 
 	public Airport(){}
 

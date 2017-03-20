@@ -1,10 +1,16 @@
 package com.jstudio.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -15,12 +21,21 @@ public class Rout {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "idrout")
 	private int idrout;
-	private int from_airport;
-	private int to_airport;
+
+	@ManyToOne
+	@JoinColumn(name = "idairport", insertable = false, updatable = false)
+	Airport from_airport;
+
+	@ManyToOne
+	@JoinColumn(name = "idairport", insertable = false, updatable = false)
+	Airport to_airport;
+
+	@OneToMany(mappedBy = "rout")
+    private List<Flight> flight = new ArrayList<Flight>();
 
 	public Rout(){}
 
-	public Rout(int from_airport, int to_airport){
+	public Rout(Airport from_airport, Airport to_airport){
 		this.from_airport = from_airport;
 		this.to_airport = to_airport;
 	}
@@ -33,19 +48,19 @@ public class Rout {
 		this.idrout = idrout;
 	}
 
-	public int getFrom_airport() {
+	public Airport getFrom_airport() {
 		return from_airport;
 	}
 
-	public void setFrom_airport(int from_airport) {
+	public void setFrom_airport(Airport from_airport) {
 		this.from_airport = from_airport;
 	}
 
-	public int getTo_airport() {
+	public Airport getTo_airport() {
 		return to_airport;
 	}
 
-	public void setTo_airport(int to_airport) {
+	public void setTo_airport(Airport to_airport) {
 		this.to_airport = to_airport;
 	}
 

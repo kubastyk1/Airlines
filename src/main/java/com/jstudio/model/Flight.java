@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -19,15 +21,18 @@ public class Flight {
 	private int idflight;
 	private Date term;
 	private String flight_number;
-	private int routid;
 	private double cost;
+
+	@ManyToOne
+    @JoinColumn(name = "idrout")
+	Rout rout;
 
 	public Flight(){}
 
-	public Flight(Date term, String flight_number, int routid, double cost){
+	public Flight(Date term, String flight_number, Rout rout, double cost){
 		this.term = term;
 		this.flight_number = flight_number;
-		this.routid = routid;
+		this.rout = rout;
 		this.cost = cost;
 	}
 
@@ -55,12 +60,12 @@ public class Flight {
 		this.flight_number = flight_number;
 	}
 
-	public int getRoutid() {
-		return routid;
+	public Rout getRoutid() {
+		return rout;
 	}
 
-	public void setRoutid(int routid) {
-		this.routid = routid;
+	public void setRoutid(Rout rout) {
+		this.rout = rout;
 	}
 
 	public double getCost() {
@@ -74,7 +79,7 @@ public class Flight {
 	@Override
 	public String toString() {
 		return "Flight [idflight=" + idflight + ", term=" + term + ", flight_number=" + flight_number + ", routid="
-				+ routid + ", cost=" + cost + "]";
+				+ rout + ", cost=" + cost + "]";
 	}
 
 }

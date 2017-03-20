@@ -6,4 +6,5 @@ public interface ObjectDAO<T> {
 
 	public void save(T objectToSave);
 	public List<T> list(T objectToCheckType);
+	public List<T> getFlights(String fromAirport, String toAirport);
 }

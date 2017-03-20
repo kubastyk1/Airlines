@@ -2,7 +2,7 @@ package com.jstudio.dao;
 
 import java.util.List;
 
-
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -37,6 +37,18 @@ public class ObjectDAOImpl implements ObjectDAO<Object>{
 
 		List<Object> list = session.createQuery("from " + objectType).list();
 		session.close();
+		return list;
+	}
+
+	public List getFlights(String fromAirport, String toAirport){
+
+		Session session = this.sessionFactory.openSession();
+
+		List<Object> list = session.createQuery(
+				"FROM Flight f1 INNER JOIN f1.idrout r1 ON f1.idrout = r1.idrout"
+				).list();
+		session.close();
+
 		return list;
 	}
 
