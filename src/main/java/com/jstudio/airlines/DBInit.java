@@ -130,29 +130,18 @@ public class DBInit {
 	public static void addRoutToQuery(){
 
 		List<Airport> list = getRecords(new Airport());
-//		ArrayList<Integer> idAirports = new ArrayList();
-
-/*		for(Airport airport : list){
-			idAirports.add(airport.getIdairport());
-			System.out.println(airport.getIdairport());
-		}*/
 
 		for(Airport airport: list){
 			for(Airport airport2 : list){
-				Rout rout = new Rout(airport, airport2);
-				objectDAO.save(rout);
-				System.out.println("Airport:: " + rout);
+				if(airport.getIdairport() != airport2.getIdairport()){
+
+					Rout rout = new Rout(airport, airport2);
+					objectDAO.save(rout);
+					System.out.println("Airport:: " + rout);
+				}
 			}
 		}
 
-/*		for(int i = 0; i < idAirports.size(); i++){
-			for(int j = 0; j < idAirports.size(); j++){
-
-				Rout rout = new Rout(idAirports.get(i), idAirports.get(j));
-				objectDAO.save(rout);
-				System.out.println("Airport:: " + rout);
-			}
-		}*/
 	}
 
 }

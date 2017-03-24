@@ -23,11 +23,11 @@ public class Rout {
 	private int idrout;
 
 	@ManyToOne
-	@JoinColumn(name = "idairport", insertable = false, updatable = false)
+	@JoinColumn(name = "idairport")
 	Airport from_airport;
-
+//, insertable = false, updatable = false
 	@ManyToOne
-	@JoinColumn(name = "idairport", insertable = false, updatable = false)
+	@JoinColumn(name = "idairport2")
 	Airport to_airport;
 
 	@OneToMany(mappedBy = "rout")
@@ -35,8 +35,8 @@ public class Rout {
 
 	public Rout(){}
 
-	public Rout(Airport from_airport, Airport to_airport){
-		this.from_airport = from_airport;
+	public Rout(Airport airport, Airport to_airport){
+		this.from_airport = airport;
 		this.to_airport = to_airport;
 	}
 
@@ -66,7 +66,7 @@ public class Rout {
 
 	@Override
 	public String toString() {
-		return "Rout [idrout=" + idrout + ", from_airport=" + from_airport + ", to_airport=" + to_airport + "]";
+		return "Rout [idrout=" + idrout + ", from_airport=" + from_airport + ", to_airport=" +/* to_airport +*/ "]";
 	}
 
 }

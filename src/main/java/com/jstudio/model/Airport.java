@@ -19,13 +19,16 @@ public class Airport {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "idairport")
 	private int idairport;
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name = "idairport2")
+	private int idairport2;
 	private String city;
 	private String code;
 
-	@OneToMany(mappedBy = "airport")
+	@OneToMany(mappedBy = "from_airport")
     private List<Rout> rout = new ArrayList<Rout>();
 
-	@OneToMany(mappedBy = "airport")
+	@OneToMany(mappedBy = "to_airport")
     private List<Rout> rout2 = new ArrayList<Rout>();
 
 	public Airport(){}
