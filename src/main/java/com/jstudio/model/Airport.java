@@ -11,17 +11,23 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.GenericGenerator;
+
 @Entity
 @Table(name = "airport")
 public class Airport {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(generator = "increment")
+	@GenericGenerator(name = "increment", strategy = "increment")
 	@Column(name = "idairport")
 	private int idairport;
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+
+	@GeneratedValue(generator = "increment")
+	@GenericGenerator(name = "increment", strategy = "increment")
 	@Column(name = "idairport2")
 	private int idairport2;
+
 	private String city;
 	private String code;
 
@@ -65,6 +71,10 @@ public class Airport {
 	@Override
 	public String toString() {
 		return "Airport [idairport=" + idairport + ", city=" + city + ", code=" + code + "]";
+	}
+
+	public String getClassName(){
+		return "Airport";
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.jstudio.airlines;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -7,7 +8,6 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -26,9 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.jstudio.model.Airport;
 import com.jstudio.model.Flight;
 import com.jstudio.model.Person;
-import com.jstudio.model.Rout;
 import com.jstudio.model.Trip;
-import com.jstudio.dao.ObjectDAO;
 
 /**
  * Handles requests for the application home page.
@@ -36,45 +34,24 @@ import com.jstudio.dao.ObjectDAO;
 @Controller
 public class HomeController {
 
-	private static ObjectDAO objectDAO;
 	private List<Trip> tripList;
+	private DBInit dbInit;
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String home(Locale locale, Model model) {
+	public String home(Locale locale, Model model) throws ParseException {
 
-		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("HibernateConfig.xml");
-
-		objectDAO = context.getBean(ObjectDAO.class);
 		tripList = new ArrayList();
 
+		dbInit = new DBInit();
+		dbInit.initDatabase();
+
 		Airport airport = new Airport();
-		List<Airport> airportList = getRecords(airport);
+		List<Airport> airportList = dbInit.getRecords(new Airport());
 
 		model.addAttribute("airportList", airportList);
 
-/*		Person person = new Person("kuba1", "kuba1@wp.pl","kuba", "kuba", "kubakuba");
-		addRecord(person);*/
-
 		return "home";
 	}
-
-	private static <T> List<T> getRecords(T objectType){
-		List<T> list = objectDAO.list(objectType);
-//		printList(list);
-
-		return list;
-	}
-
-	private static <T> void printList(List<T> list){
-		for(T a : list){
-			System.out.println("List:: " + a);
-		}
-	}
-
-	private static <T> void addRecord(T record){
-		objectDAO.save(record);
-	}
-
 
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
 	public String search(Locale locale, Model model) {
@@ -83,9 +60,11 @@ public class HomeController {
 		model.addAttribute("trip", trip);
 
 		List flightsList = new ArrayList();
-		flightsList = objectDAO.getFlights(trip.getFromAirport(), trip.getToAirport());
 
-		printList(flightsList);
+		flightsList = dbInit.getFlights(trip.getFromAirport(), trip.getToAirport());
+	//	flightsList = objectDAO.getFlights(trip.getFromAirport(), trip.getToAirport());
+
+		dbInit.showRecords(flightsList);
 
 		return "search";
 	}
@@ -172,7 +151,7 @@ public class HomeController {
 	@RequestMapping(value = "/signup", method = RequestMethod.POST)
 	public String signup(Person person, Model model) {
 
-		addRecord(person);
+//		addRecord(person);
 	/*	model.addAttribute("newUser", user);*/
 		return "home";
 	}

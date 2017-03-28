@@ -1,8 +1,8 @@
 package com.jstudio.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -13,7 +13,7 @@ import com.jstudio.model.Person;
 import com.jstudio.model.Reservation;
 import com.jstudio.model.Rout;
 
-public class ObjectDAOImpl implements ObjectDAO<Object>{
+public class ObjectDAOImpl<T> implements ObjectDAO<T>{
 
 	private SessionFactory sessionFactory;
 
@@ -21,7 +21,7 @@ public class ObjectDAOImpl implements ObjectDAO<Object>{
         this.sessionFactory = sessionFactory;
     }
 
-	public void save(Object objectToSave) {
+	public void save(T objectToSave) {
 		Session session = this.sessionFactory.openSession();
 		Transaction tx = session.beginTransaction();
 		session.persist(objectToSave);
@@ -30,12 +30,18 @@ public class ObjectDAOImpl implements ObjectDAO<Object>{
 
 	}
 
-	public List<Object> list(Object objectToCheckType) {
+	public List<T> list(T objectToCheckType) {
+		System.out.println("Dostalem sie do list w DAO");
+		System.out.println("objectToCheckType " + objectToCheckType.toString());
 		Session session = this.sessionFactory.openSession();
 
 		String objectType = checkObjectType(objectToCheckType);
+		System.out.println("yy objectType " + objectType);
+//objectToCheckType.getClass().getSimpleName()
+	/*	List list = new ArrayList();
+		list.add(new Airport("ooo", "p"));*/
+		List list = session.createQuery("from " + objectType).list();
 
-		List<Object> list = session.createQuery("from " + objectType).list();
 		session.close();
 		return list;
 	}
@@ -44,16 +50,16 @@ public class ObjectDAOImpl implements ObjectDAO<Object>{
 
 		Session session = this.sessionFactory.openSession();
 
-		List<Object> list = session.createQuery(
-				"FROM Flight f1 INNER JOIN f1.idrout r1 ON f1.idrout = r1.idrout"
-				).list();
+		String idflight = "3";
+		List<Flight> list = session.createQuery("FROM Flight f").list();
 		session.close();
 
 		return list;
 	}
 
-	private String checkObjectType(Object objectToCheckType){
+	private String checkObjectType(T objectToCheckType){
 
+		System.out.println("ss objectToCheckType " + objectToCheckType.toString());
 		String objectType = null;
 
 		if (objectToCheckType instanceof Person) {
@@ -70,6 +76,7 @@ public class ObjectDAOImpl implements ObjectDAO<Object>{
 			objectType = "";
 		}
 
+		System.out.println("ss objectType " + objectType);
 		return objectType;
 	}
 

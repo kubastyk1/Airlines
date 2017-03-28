@@ -3,6 +3,7 @@ package com.jstudio.airlines;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -10,41 +11,54 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.ThreadLocalRandom;
 
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Component;
 
 import com.jstudio.dao.ObjectDAO;
+import com.jstudio.dao.ObjectDAOImpl;
+import com.jstudio.dao.ObjectDAOSingleton;
 import com.jstudio.model.Airport;
 import com.jstudio.model.Flight;
 import com.jstudio.model.Rout;
 
+@Component
 public class DBInit {
 
 	private static ObjectDAO objectDAO;
 
-	public static void main(String[] args) throws ParseException {
+
+	public DBInit() {
 
 		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("HibernateConfig.xml");
 
 		objectDAO = context.getBean(ObjectDAO.class);
+	}
+
+	@EventListener(ContextRefreshedEvent.class)
+	public void initDatabase() throws ParseException{
 
 		addAirportToQuery();
 		addRoutToQuery();
 		addFlightToQuery();
 
-		context.close();
+		System.out.println("Database successfully initialized!");
 	}
 
-	private static <T> void addRecord(T record){
+	public <T> void addRecord(T record){
 		objectDAO.save(record);
 	}
 
-	private static <T> List getRecords(T objectType){
+	public <T> List getRecords(T objectType){
+		System.out.println("DBInit objectType " + objectType.getClass().getSimpleName());
 		List<T> list = objectDAO.list(objectType);
 
 		return list;
 	}
 
-	private static <T> void showRecords(T objectType){
+	public <T> void showRecords(T objectType){
+
 		List<T> list = objectDAO.list(objectType);
 
 		for(T a : list){
@@ -53,7 +67,15 @@ public class DBInit {
 	}
 
 
-	public static void addFlightToQuery() throws ParseException{
+	public List getFlights(String fromFlight, String toFlight){
+
+		//List flightsList = objectDAO.getFlights(fromFlight, toFlight);
+		List flightsList = getRecords(new Flight());
+		return flightsList;
+	}
+
+
+	public void addFlightToQuery() throws ParseException{
 
 		List<Rout> routList = getRecords(new Rout());
 		int flightNum = 11000;
@@ -92,7 +114,6 @@ public class DBInit {
 				System.out.println(flight);
 
 				objectDAO.save(flight);
-				System.out.println("Airport:: " + flight);
 
 				if(term.after(endDate)){
 					break;
@@ -102,7 +123,7 @@ public class DBInit {
 
 	}
 
-	public static void addAirportToQuery(){
+	public void addAirportToQuery(){
 
 		HashMap<String, String> airlinesMap = new HashMap<String, String>();
 		airlinesMap.put("Katowice", "KTW");
@@ -123,11 +144,10 @@ public class DBInit {
 		{
 			Airport airport = new Airport(entry.getKey(), entry.getValue());
 			objectDAO.save(airport);
-			System.out.println("Airport:: " + airport);
 		}
 	}
 
-	public static void addRoutToQuery(){
+	public void addRoutToQuery(){
 
 		List<Airport> list = getRecords(new Airport());
 
@@ -137,7 +157,6 @@ public class DBInit {
 
 					Rout rout = new Rout(airport, airport2);
 					objectDAO.save(rout);
-					System.out.println("Airport:: " + rout);
 				}
 			}
 		}

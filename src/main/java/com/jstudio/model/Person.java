@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.GenericGenerator;
+
 /**
  * Entity bean with JPA annotations
  * Hibernate provides JPA implementation
@@ -18,8 +20,9 @@ import javax.persistence.Table;
 public class Person {
 
 	@Id
+	@GeneratedValue(generator = "increment")
+	@GenericGenerator(name = "increment", strategy = "increment")
 	@Column(name="idperson")
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int idperson;
 
 	private String login;

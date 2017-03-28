@@ -7,13 +7,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.GenericGenerator;
+
 @Entity
 @Table(name="reservation")
 public class Reservation {
 
 	@Id
+	@GeneratedValue(generator = "increment")
+	@GenericGenerator(name = "increment", strategy = "increment")
 	@Column(name="idreservation")
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int idreservation;
 
 	private int idperson;
