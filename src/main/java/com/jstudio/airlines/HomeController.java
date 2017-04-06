@@ -26,6 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.jstudio.model.Airport;
 import com.jstudio.model.Flight;
 import com.jstudio.model.Person;
+import com.jstudio.model.Rout;
 import com.jstudio.model.Trip;
 
 /**
@@ -34,13 +35,11 @@ import com.jstudio.model.Trip;
 @Controller
 public class HomeController {
 
-	private List<Trip> tripList;
+	private Trip trip;
 	private DBInit dbInit;
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) throws ParseException {
-
-		tripList = new ArrayList();
 
 		dbInit = new DBInit();
 		dbInit.initDatabase();
@@ -54,17 +53,18 @@ public class HomeController {
 	}
 
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
-	public String search(Locale locale, Model model) {
+	public String search(Locale locale, Model model) throws ParseException {
 
-		Trip trip = tripList.get(0);
-		model.addAttribute("trip", trip);
+		Airport fromAirport = dbInit.getAirport(trip.getFromAirport());
+		Airport toAirport = dbInit.getAirport(trip.getToAirport());
+		Rout rout = dbInit.getRout(fromAirport, toAirport);
 
-		List flightsList = new ArrayList();
+		List<Flight> flightsList = dbInit.getFlightsWithRout(rout);
 
-		flightsList = dbInit.getFlights(trip.getFromAirport(), trip.getToAirport());
-	//	flightsList = objectDAO.getFlights(trip.getFromAirport(), trip.getToAirport());
+		model.addAttribute("fromAirport", fromAirport);
+		model.addAttribute("toAirport", toAirport);
+		model.addAttribute("flightsList", flightsList);
 
-		dbInit.showRecords(flightsList);
 
 		return "search";
 	}
@@ -187,11 +187,11 @@ public class HomeController {
 
 	@MessageMapping("/sendValues")
     @SendTo("/topic/showValues")
-    public Trip showValues(Trip trip) throws Exception {
+    public Trip showValues(Trip newTrip) throws Exception {
         Thread.sleep(3000); // simulated delay
 
         System.out.println("Wszedlem do wiekuistej przesztrzeni Soapowej");
-        tripList.add(trip);
+        trip = newTrip;
 
         return trip;
     }

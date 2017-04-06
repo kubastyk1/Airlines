@@ -51,7 +51,7 @@ public class DBInit {
 	}
 
 	public <T> List getRecords(T objectType){
-		System.out.println("DBInit objectType " + objectType.getClass().getSimpleName());
+
 		List<T> list = objectDAO.list(objectType);
 
 		return list;
@@ -66,11 +66,26 @@ public class DBInit {
 		}
 	}
 
+	public Airport getAirport(String airportName){
 
-	public List getFlights(String fromFlight, String toFlight){
+		return objectDAO.getAirport(airportName);
+	}
 
-		//List flightsList = objectDAO.getFlights(fromFlight, toFlight);
-		List flightsList = getRecords(new Flight());
+	public Rout getRout(Airport fromAirport, Airport toAirport){
+
+		return objectDAO.getRout(fromAirport, toAirport);
+	}
+
+
+	public List getFlights(){
+
+		List flightsList = objectDAO.getFlights();
+		return flightsList;
+	}
+
+	public List getFlightsWithRout(Rout rout){
+
+		List flightsList = objectDAO.getFlightsWithRout(rout);
 		return flightsList;
 	}
 
@@ -106,12 +121,12 @@ public class DBInit {
 				c.add(Calendar.MINUTE, minute);
 				date = dateFormat.format(c.getTime());
 
-				System.out.println(date);
+//				System.out.println(date);
 
 				term = dateFormat.parse(date);
 				Flight flight = new Flight(term, flightNumber, rout, cost);
 
-				System.out.println(flight);
+//				System.out.println(flight);
 
 				objectDAO.save(flight);
 

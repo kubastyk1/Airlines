@@ -3,6 +3,7 @@ package com.jstudio.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -31,30 +32,62 @@ public class ObjectDAOImpl<T> implements ObjectDAO<T>{
 	}
 
 	public List<T> list(T objectToCheckType) {
-		System.out.println("Dostalem sie do list w DAO");
-		System.out.println("objectToCheckType " + objectToCheckType.toString());
 		Session session = this.sessionFactory.openSession();
 
 		String objectType = checkObjectType(objectToCheckType);
-		System.out.println("yy objectType " + objectType);
-//objectToCheckType.getClass().getSimpleName()
-	/*	List list = new ArrayList();
-		list.add(new Airport("ooo", "p"));*/
 		List list = session.createQuery("from " + objectType).list();
 
 		session.close();
 		return list;
 	}
 
-	public List getFlights(String fromAirport, String toAirport){
+	public List getFlights(){
 
 		Session session = this.sessionFactory.openSession();
 
-		String idflight = "3";
-		List<Flight> list = session.createQuery("FROM Flight f").list();
-		session.close();
+		List list = session.createQuery("from Flight f where f.idflight='4'").list();
 
+		session.close();
 		return list;
+	}
+
+	public List<T> getFlightsWithRout(Rout rout){
+
+		Session session = this.sessionFactory.openSession();
+
+		Query q = session.createQuery("from Flight a where a.rout=:name");
+		q.setParameter("name", rout);
+		List<T> list = q.list();
+
+		session.close();
+		return list;
+	}
+
+	public Airport getAirport(String airportName){
+		Session session = this.sessionFactory.openSession();
+
+		Query q = session.createQuery("from Airport a where a.city=:name");
+		q.setParameter("name", airportName);
+		List<Airport> list = q.list();
+
+		Airport airport = list.get(0);
+
+		session.close();
+		return airport;
+	}
+
+	public Rout getRout(Airport fromAirport, Airport toAirport){
+		Session session = this.sessionFactory.openSession();
+
+		Query q = session.createQuery("from Rout a where a.from_airport=:name1 and a.to_airport=:name2");
+		q.setParameter("name1", fromAirport);
+		q.setParameter("name2", toAirport);
+		List<Rout> list = q.list();
+
+		Rout rout = list.get(0);
+
+		session.close();
+		return rout;
 	}
 
 	private String checkObjectType(T objectToCheckType){
