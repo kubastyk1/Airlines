@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.jstudio.model.Airport;
 import com.jstudio.model.Rout;
+import com.jstudio.model.User;
+import com.jstudio.model.UserRole;
 
 public interface ObjectDAO<T> {
 
@@ -13,4 +15,5 @@ public interface ObjectDAO<T> {
 	public Airport getAirport(String airportName);
 	public Rout getRout(Airport fromAirport, Airport toAirport);
 	public List<T> getFlightsWithRout(Rout routID);
+	public void deleteUser(UserRole userRole);
 }

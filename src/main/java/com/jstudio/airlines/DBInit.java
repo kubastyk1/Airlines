@@ -3,7 +3,6 @@ package com.jstudio.airlines;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -11,37 +10,33 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.ThreadLocalRandom;
 
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.context.event.EventListener;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.stereotype.Component;
+import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import com.jstudio.dao.ObjectDAO;
-import com.jstudio.dao.ObjectDAOImpl;
-import com.jstudio.dao.ObjectDAOSingleton;
 import com.jstudio.model.Airport;
 import com.jstudio.model.Flight;
 import com.jstudio.model.Rout;
+import com.jstudio.model.User;
+import com.jstudio.model.UserRole;
 
-@Component
 public class DBInit {
 
 	private static ObjectDAO objectDAO;
 
 
-	public DBInit() {
+	public DBInit(ObjectDAO objectDAO) {
 
-		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("HibernateConfig.xml");
-
-		objectDAO = context.getBean(ObjectDAO.class);
+		this.objectDAO = objectDAO;
 	}
 
-	@EventListener(ContextRefreshedEvent.class)
 	public void initDatabase() throws ParseException{
 
 		addAirportToQuery();
 		addRoutToQuery();
 		addFlightToQuery();
+		addUsersToQuery();
 
 		System.out.println("Database successfully initialized!");
 	}
@@ -65,30 +60,6 @@ public class DBInit {
 			System.out.println("List:: " + a);
 		}
 	}
-
-	public Airport getAirport(String airportName){
-
-		return objectDAO.getAirport(airportName);
-	}
-
-	public Rout getRout(Airport fromAirport, Airport toAirport){
-
-		return objectDAO.getRout(fromAirport, toAirport);
-	}
-
-
-	public List getFlights(){
-
-		List flightsList = objectDAO.getFlights();
-		return flightsList;
-	}
-
-	public List getFlightsWithRout(Rout rout){
-
-		List flightsList = objectDAO.getFlightsWithRout(rout);
-		return flightsList;
-	}
-
 
 	public void addFlightToQuery() throws ParseException{
 
@@ -175,7 +146,24 @@ public class DBInit {
 				}
 			}
 		}
+	}
 
+	public void addUsersToQuery(){
+
+		User user = new User("user1", "pass1", true);
+		User mkyong = new User("mkyong", "$2a$10$04TVADrR6/SPLBjsK0N30.Jf5fNjBugSACeGv1S69dZALR7lSov0y", true);
+		User alex = new User("alex", "$2a$10$04TVADrR6/SPLBjsK0N30.Jf5fNjBugSACeGv1S69dZALR7lSov0y", true);
+
+		UserRole userRole1 = new UserRole(mkyong, "ROLE_USER");
+		UserRole userRole2 = new UserRole(mkyong, "ROLE_ADMIN");
+		UserRole userRole3 = new UserRole(alex, "ROLE_USER");
+
+		objectDAO.save(user);
+		objectDAO.save(mkyong);
+		objectDAO.save(alex);
+		objectDAO.save(userRole1);
+		objectDAO.save(userRole2);
+		objectDAO.save(userRole3);
 	}
 
 }

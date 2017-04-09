@@ -20,29 +20,17 @@
 		<logout logout-success-url="/login?logout" logout-url="/j_spring_security_logout" />
 		<!-- enable csrf protection -->
 		<csrf />
-		<session-management>
+<!--  		<session-management>
 			<concurrency-control max-sessions="1" />
 		</session-management>
 		<remember-me token-validity-seconds="1209600"
-			remember-me-parameter="remember-me" />
+			remember-me-parameter="remember-me" />-->
 	</http>
 
 	<authentication-manager>
-		<authentication-provider>
-
-<!-- 			<jdbc-user-service data-source-ref="dataSource"
-		 		 users-by-username-query=
-		    		"select login,password from person where login=?"
-		 		 authorities-by-username-query=
-		    		"select idperson, role from user_roles where idperson =?  " />
- -->
-
-			<user-service>
-				<user name="user1" password="pass1" authorities="ROLE_ADMIN" />
-				<user name="user2" password="pass2" authorities="ROLE_USER" />
-				<user name="user3" password="pass3" authorities="ROLE_USER" />
-				<user name="user4" password="pass4" authorities="ROLE_USER" />
-			</user-service>
+		<authentication-provider user-service-ref="myUserDetailsService" >
+			<password-encoder hash="bcrypt" />
 		</authentication-provider>
 	</authentication-manager>
+
 </beans:beans>

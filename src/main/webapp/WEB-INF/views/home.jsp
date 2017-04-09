@@ -24,6 +24,8 @@
 
 <script src="<c:url value="/resources/js/sockjs-0.3.4.js" />"></script>
 <script src="<c:url value="/resources/js/stomp.js" />"></script>
+<script src="<c:url value="/resources/js/stompClient.js" />"></script>
+
 
 <link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
 <link href="<c:url value="/resources/css/cover.css" />" rel="stylesheet">
@@ -32,22 +34,22 @@
 	rel="stylesheet" />
 
 <script>
+
 	window.onload = function() {
-		/* Conection */
 		var stompClient = null;
 		connect();
 	}
 
-	/* WebSocket functions */
 	function connect() {
 	    var socket = new SockJS("<c:url value='/hello'/>");
 	    stompClient = Stomp.over(socket);
 	    stompClient.connect({}, function(frame) {
 	        console.log('Connected: ' + frame);
 	        stompClient.subscribe('/topic/showValues', showValues);
+	        stompClient.subscribe('/topic/showUsersAfterDelete', showUsersAfterDelete);
 	    });
 	}
-
+/*
 	function sendValues(){
 		var fromAirport = document.getElementById("fromButton").innerText;
 		var toAirport = document.getElementById("toButton").innerText;
@@ -65,6 +67,10 @@
 		changeButtonName();
 	}
 
+	function showUsersAfterDelete(message) {
+
+	}
+
 	function changeFromDescription(change) {
 		var x = document.getElementById("fromButton");
 		x.innerHTML = change;
@@ -78,7 +84,7 @@
 		var x = document.getElementById("searchBtn");
 		x.innerHTML = "zima czyma";
 	}
-
+*/
 </script>
 
 </head>

@@ -13,6 +13,8 @@ import com.jstudio.model.Flight;
 import com.jstudio.model.Person;
 import com.jstudio.model.Reservation;
 import com.jstudio.model.Rout;
+import com.jstudio.model.User;
+import com.jstudio.model.UserRole;
 
 public class ObjectDAOImpl<T> implements ObjectDAO<T>{
 
@@ -90,9 +92,25 @@ public class ObjectDAOImpl<T> implements ObjectDAO<T>{
 		return rout;
 	}
 
+	public void deleteUser(UserRole userRole){
+		Session session = this.sessionFactory.openSession();
+
+		System.out.println("oooooooooooooooooo");
+		User user = new User();
+		user.setUsername(userRole.getUser().getUsername());
+		session.update(user);
+
+//		UserRole userRole = (UserRole)session.load(UserRole.class, Integer.parseInt(id));
+		System.out.println("pp " + userRole.getUser() + " " + userRole.getUserRoleId());
+//		User user = userRole.getUser();
+//		session.delete(userRole);
+		session.delete(user);
+
+		session.close();
+	}
+
 	private String checkObjectType(T objectToCheckType){
 
-		System.out.println("ss objectToCheckType " + objectToCheckType.toString());
 		String objectType = null;
 
 		if (objectToCheckType instanceof Person) {
@@ -105,12 +123,14 @@ public class ObjectDAOImpl<T> implements ObjectDAO<T>{
 			objectType = "Reservation";
 		} else if (objectToCheckType instanceof Rout){
 			objectType = "Rout";
+		} else if (objectToCheckType instanceof User){
+			objectType = "User";
+		} else if (objectToCheckType instanceof UserRole){
+			objectType = "UserRole";
 		} else {
 			objectType = "";
 		}
 
-		System.out.println("ss objectType " + objectType);
 		return objectType;
 	}
-
 }

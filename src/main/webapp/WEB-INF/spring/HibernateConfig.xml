@@ -15,16 +15,18 @@
 
 
 	<!-- Hibernate 4 SessionFactory Bean definition -->
-	<bean id="hibernate4AnnotatedSessionFactory"
+	<bean id="sessionFactory"
 		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 		<property name="annotatedClasses">
 			<list>
-				<value>com.jstudio.model.Person</value>
 				<value>com.jstudio.model.Airport</value>
 				<value>com.jstudio.model.Rout</value>
 				<value>com.jstudio.model.Flight</value>
 				<value>com.jstudio.model.Reservation</value>
+				<value>com.jstudio.model.User</value>
+				<value>com.jstudio.model.UserRole</value>
+				<value>com.jstudio.model.Person</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">
@@ -38,7 +40,35 @@
 	</bean>
 
 	<bean id="objectDAO" class="com.jstudio.dao.ObjectDAOImpl">
-		<property name="sessionFactory" ref="hibernate4AnnotatedSessionFactory" />
+		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
+
+	<bean id="userDao" class="com.jstudio.dao.UserDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="myUserDetailsService" class="com.jstudio.service.MyUserDetailsService">
+		<property name="userDao" ref="userDao" />
+	</bean>
+
+	<!-- MUST have transaction manager, using aop and aspects  -->
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+	    <tx:attributes>
+		<tx:method name="get*" read-only="true" />
+		<tx:method name="find*" read-only="true" />
+		<tx:method name="*" />
+	    </tx:attributes>
+	</tx:advice>
+
+	<aop:config>
+	    <aop:pointcut id="userServicePointCut"
+		expression="execution(* com.jstudio.service.*Service.*(..))" />
+	    <aop:advisor advice-ref="txAdvice" pointcut-ref="userServicePointCut" />
+	</aop:config>
 
 </beans>
