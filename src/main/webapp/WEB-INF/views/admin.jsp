@@ -53,12 +53,27 @@
 	        console.log('Connected: ' + frame);
 	        stompClient.subscribe('/topic/showValues', showValues);
 	        stompClient.subscribe('/topic/showUsersAfterDelete', showUsersAfterDelete);
+	        stompClient.subscribe('/topic/showFlight', showFlight);
 	    });
 	}
 </script>
 </head>
 
 <body>
+
+	<!-- Spring Security -->
+	<script>
+		function formSubmit() {
+			document.getElementById("logoutForm").submit();
+		}
+	</script>
+
+	<c:url value="/j_spring_security_logout" var="logoutUrl" />
+
+	<form action="${logoutUrl}" method="post" id="logoutForm">
+		<input type="hidden" name="${_csrf.parameterName}"
+			value="${_csrf.token}" />
+	</form>
 
 	<nav class="navbar navbar-inverse navbar-fixed-top">
 	<div class="container-fluid">
@@ -75,7 +90,7 @@
 		<div id="navbar" class="navbar-collapse collapse">
 			<ul class="nav navbar-nav navbar-right">
 
-				<li class="active"><a href="#">Home</a></li>
+				<li class="active"><a href="/airlines">Home</a></li>
 				<!--  Jezeli nie jest zalogowany  -->
 				<c:if test="${pageContext.request.userPrincipal.name == null}">
 					<form name='signupForm' action='/airlines/signup' method='GET'>

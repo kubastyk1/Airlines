@@ -68,9 +68,9 @@ public class DBInit {
 		double cost;
 		for(Rout rout : routList){
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-			String date = "2017-03-20 17:00:00";
+			String date = "2017-04-20 17:00:00";
 			Date term = null;
-			String endDateString = "2017-04-30 17:00:00";
+			String endDateString = "2017-05-30 17:00:00";
 			Date endDate = dateFormat.parse(endDateString);
 
 			while(true){
@@ -150,16 +150,14 @@ public class DBInit {
 
 	public void addUsersToQuery(){
 
-		User user = new User("user1", "pass1", true);
-		User mkyong = new User("mkyong", "$2a$10$04TVADrR6/SPLBjsK0N30.Jf5fNjBugSACeGv1S69dZALR7lSov0y", true);
+		User admin = new User("admin", "$2a$10$04TVADrR6/SPLBjsK0N30.Jf5fNjBugSACeGv1S69dZALR7lSov0y", true);
 		User alex = new User("alex", "$2a$10$04TVADrR6/SPLBjsK0N30.Jf5fNjBugSACeGv1S69dZALR7lSov0y", true);
 
-		UserRole userRole1 = new UserRole(mkyong, "ROLE_USER");
-		UserRole userRole2 = new UserRole(mkyong, "ROLE_ADMIN");
+		UserRole userRole1 = new UserRole(admin, "ROLE_USER");
+		UserRole userRole2 = new UserRole(admin, "ROLE_ADMIN");
 		UserRole userRole3 = new UserRole(alex, "ROLE_USER");
 
-		objectDAO.save(user);
-		objectDAO.save(mkyong);
+		objectDAO.save(admin);
 		objectDAO.save(alex);
 		objectDAO.save(userRole1);
 		objectDAO.save(userRole2);

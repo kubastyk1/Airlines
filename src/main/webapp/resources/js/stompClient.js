@@ -4,8 +4,6 @@ function sendValues(){
 	var fromDate = document.getElementById("fromDate").value;
 	var toDate = document.getElementById("toDate").value;
 
-	changeFromDescription('sendValues');
-
 	stompClient.send("/app/sendValues", {}, JSON.stringify(
     		{'fromAirport': fromAirport, 'toAirport': toAirport, 'fromDate': fromDate, 'toDate': toDate}));
 }
@@ -16,12 +14,10 @@ function deleteUser(id) {
     		{'id': id}));
 }
 
-function showValues(message) {
+function reserveFlight(idflight, clientName) {
 
-}
-
-function showUsersAfterDelete(message) {
-
+    stompClient.send("/app/reserveFlight", {}, JSON.stringify(
+    		{'idflight': idflight, 'clientName': clientName}));
 }
 
 function changeFromDescription(change) {

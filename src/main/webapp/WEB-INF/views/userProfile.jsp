@@ -102,8 +102,8 @@
 				<!--  Jezeli jest zalogowany  -->
 				<c:if test="${pageContext.request.userPrincipal.name != null}">
 					<form name='logoutForm' action='/airlines/userProfile' method='GET'>
-							<input name="submit" class="buttonStyleRed" type="submit"
-								value="${pageContext.request.userPrincipal.name}" />
+						<input name="submit" class="buttonStyleRed" type="submit"
+							value="${pageContext.request.userPrincipal.name}" />
 					</form>
 
 					<form name='userForm' action="javascript:formSubmit()" method='GET'>
@@ -118,44 +118,22 @@
 	</nav>
 
 	<div class="container-fluid">
-		<h2 class="sub-header">Available flights :</h2>
+		<h2 class="sub-header">${pageContext.request.userPrincipal.name} reservations :</h2>
 		<div class="table-responsive">
 			 <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
 				<thead>
 					<tr>
-						<th>From airport</th>
-						<th>To airport</th>
 						<th>Flight number</th>
 						<th>Date</th>
 						<th>Total cost</th>
-						<th>Reserve</th>
 					</tr>
 				</thead>
 				<tbody>
-					<c:forEach items="${flightsList}" var="i">
+					<c:forEach items="${reservationsList}" var="i">
 						<tr>
-							<td><c:out value="${i.getRout().getFrom_airport().getCity()}" /></td>
-							<td><c:out value="${i.getRout().getTo_airport().getCity()}" /></td>
-							<td><c:out value="${i.getFlight_number()}" /></td>
-							<td><c:out value="${i.getTerm()}" /></td>
-							<td><c:out value="${i.getCost()}" /></td>
-							<c:if test="${pageContext.request.userPrincipal.name != null}">
-								<td>
-									<button type="button" class="btn btn-success"
-										onclick="reserveFlight('${i.getIdflight()}', '${pageContext.request.userPrincipal.name}');">
-										Reserve
-									</button>
-								</td>
-							</c:if>
-							<!-- Nie zalogowany -->
-							<c:if test="${pageContext.request.userPrincipal.name == null}">
-								<td>
-									<button type="button" class="btn btn-default"
-										onclick="location.href='/airlines/login'">
-										Log in
-									</button>
-								</td>
-							</c:if>
+							<td><c:out value="${i.getFlight().getFlight_number()}" /></td>
+							<td><c:out value="${i.getFlight().getTerm()}" /></td>
+							<td><c:out value="${i.getFlight().getCost()}" /></td>
 						</tr>
 					</c:forEach>
 				</tbody>

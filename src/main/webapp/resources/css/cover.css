@@ -13,6 +13,7 @@ a, a:focus, a:hover {
 	text-shadow: none; /* Prevent inheritance from `body` */
 	background-color: #fff;
 	border: 1px solid #fff;
+	min-width: 200px;
 }
 
 /*
@@ -20,7 +21,7 @@ a, a:focus, a:hover {
  */
 html, body {
 	height: 100%;
-	background: url(../jpg/plane.jpg) no-repeat center center fixed;;
+	background: url(../jpg/plane.jpg) no-repeat center center fixed;
 }
 
 body {
@@ -155,39 +156,55 @@ body {
 /*
  * Affix and center
  */
-@media ( min-width : 768px) {
-	/* Pull out the header and footer */
-	.masthead {
-		position: fixed;
-		top: 0;
-	}
-	.mastfoot {
-		position: fixed;
-		bottom: 0;
-	}
-	/* Start the vertical centering */
-	.site-wrapper-inner {
-		vertical-align: middle;
-	}
-	/* Handle the widths */
-	.masthead, .mastfoot, .cover-container {
-		width: 100%;
-		/* Must be percentage or pixels for horizontal alignment */
-	}
+
+@media (min-width: 768px) {
+  /* Pull out the header and footer */
+  .masthead {
+    position: fixed;
+    top: 0;
+  }
+  .mastfoot {
+    position: fixed;
+    bottom: 0;
+  }
+  /* Start the vertical centering */
+  .site-wrapper-inner {
+    vertical-align: middle;
+  }
+  /* Handle the widths */
+  .masthead,
+  .mastfoot,
+  .cover-container {
+    width: 100%; /* Must be percentage or pixels for horizontal alignment */
+  }
 }
 
-@media ( min-width : 992px) {
-	.masthead, .mastfoot, .cover-container {
-		width: 700px;
-	}
+@media (min-width: 992px) {
+  .masthead,
+  .mastfoot,
+  .cover-container {
+    width: 700px;
+  }
 }
 
 .my-dropdown {
-	margin: 20px;
 	display: inline-block;
+	margin: 20px;
 }
 
 .calendarText {
+	padding-left: 230px;
+	width: 680px;
 	color: #333;
 	text-shadow: 0 0px 0px rgba(0, 0, 0, .1);
+}
+
+.inline-fields {
+
+	display: inline;
+}
+
+.dropdown-list{
+	min-width: 200px;
+	text-align: center;
 }

@@ -1,14 +1,16 @@
 package com.jstudio.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -29,6 +31,9 @@ public class Flight {
 	@ManyToOne
     @JoinColumn(name = "idrout")
 	Rout rout;
+
+	@OneToMany(mappedBy = "flight")
+    private List<Reservation> reservation = new ArrayList<Reservation>();
 
 	public Flight(){}
 
@@ -63,11 +68,11 @@ public class Flight {
 		this.flight_number = flight_number;
 	}
 
-	public Rout getRoutid() {
+	public Rout getRout() {
 		return rout;
 	}
 
-	public void setRoutid(Rout rout) {
+	public void setRout(Rout rout) {
 		this.rout = rout;
 	}
 

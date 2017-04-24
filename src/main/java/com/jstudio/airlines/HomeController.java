@@ -1,6 +1,7 @@
 package com.jstudio.airlines;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -25,14 +26,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.jstudio.airlines.json.mapping.ReserveFlight;
+import com.jstudio.airlines.json.mapping.UserId;
 import com.jstudio.dao.ObjectDAO;
 import com.jstudio.model.Airport;
 import com.jstudio.model.Flight;
 import com.jstudio.model.Person;
+import com.jstudio.model.Reservation;
 import com.jstudio.model.Rout;
 import com.jstudio.model.Trip;
 import com.jstudio.model.User;
-import com.jstudio.model.UserId;
 import com.jstudio.model.UserRole;
 
 /**
@@ -62,20 +65,65 @@ public class HomeController {
 	}
 
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
-	public String search(Locale locale, Model model) throws ParseException {
+	public String search(Model model) throws ParseException, InterruptedException {
 
-		Airport fromAirport = objectDAO.getAirport(trip.getFromAirport());
-		Airport toAirport = objectDAO.getAirport(trip.getToAirport());
-		Rout rout = objectDAO.getRout(fromAirport, toAirport);
+        Thread.sleep(1000); // simulated delay
+        Airport fromAirport = null;
+        Airport toAirport = null;
+        List<Flight> flightsList = new ArrayList<Flight>();
+        List<Rout> routList = null;
 
-		List<Flight> flightsList = objectDAO.getFlightsWithRout(rout);
+        if(!trip.getFromAirport().equals("From: ")){
+        	fromAirport = objectDAO.getAirport(trip.getFromAirport());
+        }
 
-		model.addAttribute("fromAirport", fromAirport);
-		model.addAttribute("toAirport", toAirport);
+        if(!trip.getToAirport().equals("To: ")){
+        	toAirport = objectDAO.getAirport(trip.getToAirport());
+        }
+
+        if(fromAirport == null && toAirport == null){
+
+        	flightsList = objectDAO.list(new Flight());
+
+        } else if(fromAirport != null && toAirport == null){
+
+        	List<Flight> tempFlightsList = null;
+        	routList = objectDAO.getRoutWhereFromAirport(fromAirport);
+        	for(Rout rout : routList){
+        		System.out.println(rout.getIdrout());
+        		tempFlightsList = objectDAO.getFlightsWithRout(rout);
+        		flightsList.addAll(tempFlightsList);
+        	}
+
+        } else if(fromAirport == null && toAirport != null){
+
+        	List<Flight> tempFlightsList = null;
+        	routList = objectDAO.getRoutWhereToAirport(toAirport);
+        	for(Rout rout : routList){
+        		System.out.println(rout.getIdrout());
+        		tempFlightsList = objectDAO.getFlightsWithRout(rout);
+        		flightsList.addAll(tempFlightsList);
+        	}
+
+        } else {
+
+        	Rout rout = objectDAO.getRout(fromAirport, toAirport);
+    		flightsList = objectDAO.getFlightsWithRout(rout);
+        }
+
 		model.addAttribute("flightsList", flightsList);
 
-
 		return "search";
+	}
+
+	@RequestMapping(value = "/userProfile", method = RequestMethod.GET)
+	public String userProfile(@RequestParam("submit") String username, Model model) throws ParseException {
+
+		User user = objectDAO.getUser(username);
+		List<Reservation> reservationsList = objectDAO.getReservations(user);
+
+		model.addAttribute("reservationsList", reservationsList);
+		return "userProfile";
 	}
 
 
@@ -163,7 +211,7 @@ public class HomeController {
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		String hashedPassword = passwordEncoder.encode(person.getPassword());
 
-		User user = new User(person.getName(), hashedPassword, true);
+		User user = new User(person.getLogin(), hashedPassword, true);
 		UserRole userRole = new UserRole(user, "ROLE_USER");
 
 		objectDAO.save(user);
@@ -203,18 +251,13 @@ public class HomeController {
 	}
 
 	@MessageMapping("/sendValues")
-    @SendTo("/topic/showValues")
-    public Trip showValues(Trip newTrip) throws Exception {
-        Thread.sleep(3000); // simulated delay
+    public void showValues(Trip trip) throws Exception {
+        Thread.sleep(500); // simulated delay
 
-        System.out.println("Wszedlem do wiekuistej przesztrzeni Soapowej");
-        trip = newTrip;
-
-        return trip;
+        this.trip = trip;
     }
 
 	@MessageMapping("/deleteUser")
-	@SendTo("/topic/showUsersAfterDelete")
     public void deleteUser(UserId userId) throws Exception {
         Thread.sleep(3000); // simulated delay
 
@@ -227,9 +270,17 @@ public class HomeController {
         		objectDAO.deleteUser(userRole);
         	}
         }
- //       objectDAO.deleteUser(userId.));
+    }
 
-//        objectDAO.deleteUser(Integer.parseInt(userRoleId));
+	@MessageMapping("/reserveFlight")
+    public void reserveFlight(ReserveFlight reserveFlight) throws Exception {
+        Thread.sleep(3000); // simulated delay
 
+        System.out.println("op " + reserveFlight.getClientName() + "  " + reserveFlight.getIdflight());
+
+        User user = objectDAO.getUser(reserveFlight.getClientName());
+        Flight flight = objectDAO.getFlight(reserveFlight.getIdflight());
+        Reservation reservation = new Reservation(user, flight);
+        objectDAO.save(reservation);
     }
 }

@@ -11,7 +11,7 @@
 <meta name="author" content="">
 <link rel="icon" href="../../favicon.ico">
 
-<title>Signin Template for Bootstrap</title>
+<title>Airlines</title>
 
 <!-- Bootstrap core CSS -->
 <link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css"

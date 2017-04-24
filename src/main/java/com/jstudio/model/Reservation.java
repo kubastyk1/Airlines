@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -19,15 +21,20 @@ public class Reservation {
 	@Column(name="idreservation")
 	private int idreservation;
 
-	private int idperson;
-	private int flightid;
+	@ManyToOne
+	@JoinColumn(name = "idflight")
+	Flight flight;
+
+	@ManyToOne
+	@JoinColumn(name = "username")
+	User username;
 
 	public Reservation(){}
 
-	public Reservation(int idperson, int flightid) {
+	public Reservation(User user, Flight flight) {
 		super();
-		this.idperson = idperson;
-		this.flightid = flightid;
+		this.username = user;
+		this.flight = flight;
 	}
 
 	public int getIdreservation() {
@@ -38,26 +45,26 @@ public class Reservation {
 		this.idreservation = idreservation;
 	}
 
-	public int getidperson() {
-		return idperson;
+	public Flight getFlight() {
+		return flight;
 	}
 
-	public void setidperson(int idperson) {
-		this.idperson = idperson;
+	public void setFlight(Flight flight) {
+		this.flight = flight;
 	}
 
-	public int getFlightid() {
-		return flightid;
+	public User getUser() {
+		return username;
 	}
 
-	public void setFlightid(int flightid) {
-		this.flightid = flightid;
+	public void setUser(User user) {
+		this.username = user;
 	}
 
 	@Override
 	public String toString() {
-		return "Reservation [idreservation=" + idreservation + ", idperson=" + idperson + ", flightid=" + flightid
-				+ "]";
+		return "Reservation [idreservation=" + idreservation + ", " + (flight != null ? "flight=" + flight + ", " : "")
+				+ (username != null ? "user=" + username : "") + "]";
 	}
 
 

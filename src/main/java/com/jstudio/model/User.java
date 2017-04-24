@@ -1,6 +1,8 @@
 package com.jstudio.model;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -20,6 +22,9 @@ public class User {
 	private String password;
 	private boolean enabled;
 	private Set<UserRole> userRole = new HashSet<UserRole>(0);
+
+	@OneToMany(mappedBy = "user")
+    private List<Reservation> reservation = new ArrayList<Reservation>();
 
 	public User() {
 	}

@@ -1,8 +1,8 @@
-package com.jstudio.model;
+package com.jstudio.airlines.json.mapping;
 
 public class UserId {
 
-	public String id;
+	private String id;
 
 	public String getId(){
 		return id;

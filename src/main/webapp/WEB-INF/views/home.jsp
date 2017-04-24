@@ -12,7 +12,7 @@
 <meta name="author" content="">
 <link rel="icon" href="../../favicon.ico">
 
-<title>Cover Template for Bootstrap</title>
+<title>Airlines</title>
 
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
@@ -45,46 +45,9 @@
 	    stompClient = Stomp.over(socket);
 	    stompClient.connect({}, function(frame) {
 	        console.log('Connected: ' + frame);
-	        stompClient.subscribe('/topic/showValues', showValues);
-	        stompClient.subscribe('/topic/showUsersAfterDelete', showUsersAfterDelete);
 	    });
 	}
-/*
-	function sendValues(){
-		var fromAirport = document.getElementById("fromButton").innerText;
-		var toAirport = document.getElementById("toButton").innerText;
-		var fromDate = document.getElementById("fromDate").value;
-		var toDate = document.getElementById("toDate").value;
 
-		changeFromDescription('sendValues');
-
-		stompClient.send("/app/sendValues", {}, JSON.stringify(
-	    		{'fromAirport': fromAirport, 'toAirport': toAirport, 'fromDate': fromDate, 'toDate': toDate}));
-	}
-
-	function showValues(message) {
-
-		changeButtonName();
-	}
-
-	function showUsersAfterDelete(message) {
-
-	}
-
-	function changeFromDescription(change) {
-		var x = document.getElementById("fromButton");
-		x.innerHTML = change;
-	}
-	function changeToDescription(change) {
-		var x = document.getElementById("toButton");
-		x.innerHTML = change;
-	}
-
-	function changeButtonName(){
-		var x = document.getElementById("searchBtn");
-		x.innerHTML = "zima czyma";
-	}
-*/
 </script>
 
 </head>
@@ -104,10 +67,6 @@
 		<input type="hidden" name="${_csrf.parameterName}"
 			value="${_csrf.token}" />
 	</form>
-
-
-
-
 
 	<div class="site-wrapper">
 		<div class="site-wrapper-inner">
@@ -133,7 +92,7 @@
 
 								<!--  Jezeli jest zalogowany  -->
 								<c:if test="${pageContext.request.userPrincipal.name != null}">
-									<form name='logoutForm' method='GET'>
+									<form name='logoutForm' action='/airlines/userProfile' method='GET'>
 										<input name="submit" class="buttonStyleRed" type="submit"
 											value="${pageContext.request.userPrincipal.name}" />
 									</form>
@@ -159,7 +118,7 @@
 							type="button" data-toggle="dropdown" id="fromButton">
 							From: <span class="caret"></span>
 						</button>
-						<ul class="dropdown-menu">
+						<ul class="dropdown-menu dropdown-list">
 							<c:forEach items="${airportList}" var="i">
 								<li>
 									<a href="javascript:changeFromDescription('<c:out value="${i.getCity()}" />');">
@@ -170,7 +129,7 @@
 						</ul>
 					</div>
 
-					<div class="container calendarText ">
+					<div class="container calendarText">
 						<div class="row">
 							<div class='col-sm-6'>
 								<div class="form-group">
@@ -198,7 +157,7 @@
 							type="button" data-toggle="dropdown" id="toButton">
 							To: <span class="caret"></span>
 						</button>
-						<ul class="dropdown-menu">
+						<ul class="dropdown-menu dropdown-list">
 							<c:forEach items="${airportList}" var="i">
 								<li>
 									<a href="javascript:changeToDescription('<c:out value="${i.getCity()}" />');">
@@ -233,8 +192,7 @@
 					</div>
 
 					<p class="lead">
-						<a href="/airlines/search" class="btn btn-lg btn-default">Search!</a>
-						<button id="searchBtn" class="buttonStyleDisable" onclick="sendValues();">Java script</button>
+						<a href="/airlines/search" onclick="sendValues();" class="btn btn-lg btn-default">Search</a>
 					</p>
 				</div>
 

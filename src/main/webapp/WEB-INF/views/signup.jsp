@@ -11,7 +11,7 @@
 <meta name="author" content="">
 <link rel="icon" href="../../favicon.ico">
 
-<title>Signin Template for Bootstrap</title>
+<title>Airlines</title>
 
 <!-- Bootstrap core CSS -->
 <link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css"
@@ -40,7 +40,7 @@
 
 	<div class="container">
 
-		<form class="signupForm" action='/airlines/signup' method='POST'>
+		<form class="form-signin" action='/airlines/signup' method='POST'>
 			<h2 class="form-signin-heading">Please sign up</h2>
 
 			<label for="inputLogin" class="sr-only">Login</label>
